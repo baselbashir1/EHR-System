@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 public class AuthMapper {
 
     public AuthResponse mapToAuthResponse(String token, UserDTO userDTO) {
-        return AuthResponse
-                .builder()
+        return AuthResponse.builder()
                 .token(token)
                 .userId(userDTO.id())
                 .username(userDTO.username())
