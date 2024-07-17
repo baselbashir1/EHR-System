@@ -10,7 +10,7 @@ public class AuthMapper {
     public AuthResponse mapToAuthResponse(String token, UserDTO userDTO) {
         return AuthResponse.builder()
                 .token(token)
-                .userId(userDTO.id())
+                .userId(userDTO.userId())
                 .username(userDTO.username())
                 .role(userDTO.role())
                 .build();

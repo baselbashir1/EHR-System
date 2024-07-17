@@ -18,4 +18,5 @@ public interface UserServiceClient {
 
     @GetMapping("/getUserByUsername/{username}")
     ResponseEntity<UserDTO> getUserByUsername(@PathVariable("username") String username);
+
 }
