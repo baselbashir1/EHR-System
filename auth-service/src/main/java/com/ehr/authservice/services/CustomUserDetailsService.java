@@ -1,7 +1,7 @@
 package com.ehr.authservice.services;
 
 import com.ehr.authservice.clients.UserServiceClient;
-import com.ehr.authservice.dto.responses.UserDTO;
+import com.ehr.authservice.dto.responses.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,8 +16,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDTO userDTO = userServiceClient.getUserByUsername(username).getBody();
-        return new CustomUserDetails(userDTO);
+        UserResponse userResponse = userServiceClient.getUserByUsername(username).getBody();
+        return new CustomUserDetails(userResponse);
     }
 
 }

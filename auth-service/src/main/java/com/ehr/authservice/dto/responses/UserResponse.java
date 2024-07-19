@@ -5,7 +5,7 @@ import com.ehr.authservice.enums.UserStatus;
 import lombok.Builder;
 
 @Builder
-public record UserDTO(
+public record UserResponse(
         Long userId,
         String username,
         String email,

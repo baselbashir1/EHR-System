@@ -38,7 +38,7 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-    public List<UserResponse> getAll() {
+    public List<UserResponse> getAllUsers() {
         return userRepository.findAllByStatus(UserStatus.ACTIVE)
                 .stream()
                 .map(userMapper::mapToUserResponse)

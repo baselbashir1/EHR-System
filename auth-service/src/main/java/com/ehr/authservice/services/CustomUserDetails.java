@@ -1,6 +1,6 @@
 package com.ehr.authservice.services;
 
-import com.ehr.authservice.dto.responses.UserDTO;
+import com.ehr.authservice.dto.responses.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,23 +13,23 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final UserDTO userDTO;
+    private final UserResponse userResponse;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Stream.of(userDTO.role())
+        return Stream.of(userResponse.role())
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return userDTO.password();
+        return userResponse.password();
     }
 
     @Override
     public String getUsername() {
-        return userDTO.username();
+        return userResponse.username();
     }
 
     @Override
