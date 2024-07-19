@@ -1,9 +1,9 @@
 package com.ehr.userservice.controllers;
 
-import com.ehr.userservice.dto.AuthUserDto;
-import com.ehr.userservice.dto.UserDto;
 import com.ehr.userservice.dto.requests.RegisterRequest;
-import com.ehr.userservice.mappers.UserMapper;
+import com.ehr.userservice.dto.responses.AuthResponse;
+import com.ehr.userservice.dto.responses.UserResponse;
+import com.ehr.userservice.services.AuthService;
 import com.ehr.userservice.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -21,37 +20,32 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper;
+    private final AuthService authService;
 
     @PostMapping("/save")
-    public ResponseEntity<UserDto> save(@Valid @RequestBody RegisterRequest request) {
-        return new ResponseEntity<>(userMapper.mapToUserDTO(userService.saveUser(request)), HttpStatus.OK);
+    public ResponseEntity<UserResponse> save(@Valid @RequestBody RegisterRequest registerRequest) {
+        return new ResponseEntity<>(authService.registerUser(registerRequest), HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserDto>> getAll() {
-        List<UserDto> result = userService.getAll()
-                .stream()
-                .map(userMapper::mapToUserDTO)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<List<UserResponse>> getAll() {
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/getUserById/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        return new ResponseEntity<>(userMapper.mapToUserDTO(userService.getUserById(id)), HttpStatus.OK);
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @GetMapping("/getUserByEmail/{email}")
-    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
-        return new ResponseEntity<>(userMapper.mapToUserDTO(userService.getUserByEmail(email)), HttpStatus.OK);
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
+        return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
     }
 
     @GetMapping("/getUserByUsername/{username}")
-    public ResponseEntity<AuthUserDto> getUserByUsername(@PathVariable String username) {
-        return new ResponseEntity<>(userMapper.mapToAuthUserDto(userService.getUserByUsername(username)), HttpStatus.OK);
+    public ResponseEntity<AuthResponse> getUserByUsername(@PathVariable String username) {
+        return new ResponseEntity<>(authService.getUserByUsername(username), HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteUserById/{id}")

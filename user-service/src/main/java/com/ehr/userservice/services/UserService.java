@@ -1,59 +1,26 @@
 package com.ehr.userservice.services;
 
-import com.ehr.userservice.dto.requests.RegisterRequest;
-import com.ehr.userservice.enums.UserRole;
+import com.ehr.userservice.dto.responses.UserResponse;
 import com.ehr.userservice.enums.UserStatus;
+import com.ehr.userservice.mappers.UserMapper;
 import com.ehr.userservice.models.User;
 import com.ehr.userservice.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
-    public User saveUser(RegisterRequest registerRequest) {
-        User toSave = User.builder()
-                .firstname(registerRequest.firstname())
-                .lastname(registerRequest.lastname())
-                .username(registerRequest.username())
-                .email(registerRequest.email())
-                .password(passwordEncoder.encode(registerRequest.password()))
-                .phone(registerRequest.phone())
-                .role(UserRole.PATIENT)
-                .status(UserStatus.ACTIVE)
-                .build();
-        return userRepository.save(toSave);
-    }
-
-    public List<User> getAll() {
-        return userRepository.findAllByStatus(UserStatus.ACTIVE);
-    }
-
-    public User getUserById(Long id) {
-        return findUserById(id);
-    }
-
-    public User getUserByEmail(String email) {
-        return findUserByEmail(email);
-    }
-
-    public User getUserByUsername(String username) {
-        return findUserByUsername(username);
-    }
-
-
-    public void deleteUserById(Long id) {
-        User toDelete = findUserById(id);
-        toDelete.setStatus(UserStatus.INACTIVE);
-        userRepository.save(toDelete);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     protected User findUserById(Long id) {
@@ -69,6 +36,31 @@ public class UserService {
     protected User findUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+    public List<UserResponse> getAll() {
+        return userRepository.findAllByStatus(UserStatus.ACTIVE)
+                .stream()
+                .map(userMapper::mapToUserResponse)
+                .collect(Collectors.toList());
+    }
+
+    public UserResponse getUserById(Long id) {
+        return userMapper.mapToUserResponse(findUserById(id));
+    }
+
+    public UserResponse getUserByEmail(String email) {
+        return userMapper.mapToUserResponse(findUserByEmail(email));
+    }
+
+    public UserResponse getUserByUsername(String username) {
+        return userMapper.mapToUserResponse(findUserByUsername(username));
+    }
+
+    public void deleteUserById(Long id) {
+        User user = findUserById(id);
+        user.setStatus(UserStatus.INACTIVE);
+        userRepository.save(user);
     }
 
 }

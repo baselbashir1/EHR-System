@@ -1,34 +1,42 @@
 package com.ehr.userservice.mappers;
 
-import com.ehr.userservice.dto.AuthUserDto;
-import com.ehr.userservice.dto.UserDto;
+import com.ehr.userservice.dto.requests.RegisterRequest;
+import com.ehr.userservice.dto.responses.UserResponse;
+import com.ehr.userservice.enums.UserRole;
+import com.ehr.userservice.enums.UserStatus;
 import com.ehr.userservice.models.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserMapper {
 
-    public UserDto mapToUserDTO(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setUserId(user.getId());
-        userDto.setUsername(user.getUsername());
-        userDto.setEmail(user.getEmail());
-        userDto.setPhone(user.getPhone());
-        userDto.setRole(user.getRole());
-        userDto.setStatus(user.getStatus());
-        return userDto;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserResponse mapToUserResponse(User user) {
+        return UserResponse.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .role(user.getRole())
+                .status(user.getStatus())
+                .build();
     }
 
-    public AuthUserDto mapToAuthUserDto(User user) {
-        AuthUserDto authUserDto = new AuthUserDto();
-        authUserDto.setUserId(user.getId());
-        authUserDto.setUsername(user.getUsername());
-        authUserDto.setEmail(user.getEmail());
-        authUserDto.setPhone(user.getPhone());
-        authUserDto.setPassword(user.getPassword());
-        authUserDto.setRole(user.getRole());
-        authUserDto.setStatus(user.getStatus());
-        return authUserDto;
+    public User mapToUser(RegisterRequest registerRequest) {
+        return User.builder()
+                .firstname(registerRequest.firstname())
+                .lastname(registerRequest.lastname())
+                .username(registerRequest.username())
+                .email(registerRequest.email())
+                .password(passwordEncoder.encode(registerRequest.password()))
+                .phone(registerRequest.phone())
+                .role(UserRole.PATIENT)
+                .status(UserStatus.ACTIVE)
+                .build();
     }
 
 }
