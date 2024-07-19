@@ -21,9 +21,12 @@ public class UserService {
 
     public User saveUser(RegisterRequest registerRequest) {
         User toSave = User.builder()
+                .firstname(registerRequest.firstname())
+                .lastname(registerRequest.lastname())
                 .username(registerRequest.username())
-                .password(passwordEncoder.encode(registerRequest.password()))
                 .email(registerRequest.email())
+                .password(passwordEncoder.encode(registerRequest.password()))
+                .phone(registerRequest.phone())
                 .role(UserRole.PATIENT)
                 .status(UserStatus.ACTIVE)
                 .build();

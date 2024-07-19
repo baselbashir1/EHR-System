@@ -7,13 +7,14 @@ import com.ehr.authservice.dto.responses.AuthResponse;
 import com.ehr.authservice.dto.responses.UserDTO;
 import com.ehr.authservice.mappers.AuthMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
@@ -22,22 +23,38 @@ public class AuthService {
     private final AuthMapper authMapper;
 
     public AuthResponse login(LoginRequest loginRequest) {
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
-        if (authenticate.isAuthenticated()) {
-            UserDTO userDTO = userServiceClient.getUserByUsername(loginRequest.username()).getBody();
-            String token = jwtService.generateToken(loginRequest.username());
-            if (userDTO != null) {
-                return authMapper.mapToAuthResponse(token, userDTO);
-            } else {
-                throw new IllegalArgumentException("Username or password incorrect");
-            }
-        } else {
+        authenticateUser(loginRequest);
+        UserDTO userDTO = fetchUserDetails(loginRequest.username());
+
+        String token = jwtService.generateToken(userDTO.username());
+        return authMapper.mapToAuthResponse(token, userDTO);
+    }
+
+    public AuthResponse register(RegisterRequest registerRequest) {
+        AuthResponse registeredUser = userServiceClient.save(registerRequest).getBody();
+        UserDTO userDTO = fetchUserDetails(registeredUser.username());
+
+        String token = jwtService.generateToken(userDTO.username());
+        return authMapper.mapToAuthResponse(token, userDTO);
+    }
+
+    private void authenticateUser(LoginRequest loginRequest) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
+        } catch (Exception e) {
+            log.error("Authentication failed for user: {}", loginRequest.username(), e);
             throw new IllegalArgumentException("Username or password incorrect");
         }
     }
 
-    public AuthResponse register(RegisterRequest registerRequest) {
-        return userServiceClient.save(registerRequest).getBody();
+    private UserDTO fetchUserDetails(String username) {
+        UserDTO userDTO = userServiceClient.getUserByUsername(username).getBody();
+        if (userDTO == null) {
+            log.error("User not found: {}", username);
+            throw new IllegalArgumentException("Username or password incorrect");
+        }
+        log.info("User details - ID: {}, Username: {}, Role: {}", userDTO.userId(), userDTO.username(), userDTO.role());
+        return userDTO;
     }
 
 }

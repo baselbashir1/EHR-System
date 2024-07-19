@@ -12,7 +12,10 @@ public class AuthMapper {
                 .token(token)
                 .userId(userDTO.userId())
                 .username(userDTO.username())
+                .email(userDTO.email())
+                .phone(userDTO.phone())
                 .role(userDTO.role())
+                .status(userDTO.status())
                 .build();
     }
 
