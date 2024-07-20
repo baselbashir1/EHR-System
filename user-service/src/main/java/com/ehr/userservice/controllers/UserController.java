@@ -1,5 +1,6 @@
 package com.ehr.userservice.controllers;
 
+import com.ehr.userservice.dto.requests.UserRequest;
 import com.ehr.userservice.dto.requests.RegisterRequest;
 import com.ehr.userservice.services.AuthService;
 import com.ehr.userservice.services.UserService;
@@ -23,32 +24,36 @@ public class UserController {
         return new ResponseEntity<>(authService.registerUser(registerRequest), HttpStatus.OK);
     }
 
+    @PostMapping("/addUser")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> addUser(@Valid @RequestBody UserRequest userRequest) {
+        userService.addUser(userRequest);
+        return new ResponseEntity<>("User added successfully", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/editUser/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> editUser(@Valid @RequestBody UserRequest userRequest, @PathVariable("userId") Long userId) {
+        userService.editUser(userRequest, userId);
+        return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteUser/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> deleteUser(@PathVariable("userId") Long userId) {
+        userService.deleteUser(userId);
+        return new ResponseEntity<>("User deleted successfully.", HttpStatus.OK);
+    }
+
     @GetMapping("/getAllUsers")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/getUserById/{id}")
-    public ResponseEntity<Object> getUserById(@PathVariable Long id) {
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
-    }
-
-    @GetMapping("/getUserByEmail/{email}")
-    public ResponseEntity<Object> getUserByEmail(@PathVariable String email) {
-        return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
-    }
-
     @GetMapping("/getUserByUsername/{username}")
-    public ResponseEntity<Object> getUserByUsername(@PathVariable String username) {
+    public ResponseEntity<Object> getUserByUsername(@PathVariable("username") String username) {
         return new ResponseEntity<>(authService.getUserByUsername(username), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/deleteUserById/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userService.getUserById(#id).username == principal")
-    public ResponseEntity<Object> deleteUserById(@PathVariable Long id) {
-        userService.deleteUserById(id);
-        return ResponseEntity.ok().build();
     }
 
 }

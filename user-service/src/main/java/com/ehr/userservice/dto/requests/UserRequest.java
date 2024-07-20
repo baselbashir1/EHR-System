@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record AddUserRequest(
+public record UserRequest(
         @NotNull(message = "Firstname is required")
         @NotEmpty(message = "Firstname is required")
         String firstname,
@@ -29,11 +29,7 @@ public record AddUserRequest(
         @NotEmpty(message = "Password is required")
         @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password must be at least 8 characters and contain at least one letter and one number")
         String password,
-        @NotNull(message = "Role is required")
-        @NotEmpty(message = "Role is required")
         UserRole role,
-        @NotNull(message = "Status is required")
-        @NotEmpty(message = "Status is required")
         UserStatus status,
         Long clinicId,
         String doctorSpecialty,
