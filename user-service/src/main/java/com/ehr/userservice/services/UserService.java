@@ -53,7 +53,7 @@ public class UserService {
         validateUser(userRequest.username(), userRequest.email());
         User user = userRepository.save(userMapper.mapToUser(userRequest));
         insertUserToTargetTable(user, userRequest);
-        log.info("User {} added successfully.", user.getId());
+        log.info("User {} added successfully", user.getId());
     }
 
     @Transactional
@@ -63,7 +63,7 @@ public class UserService {
         validateUser(userRequest.username(), userRequest.email());
         User updatedUser = userMapper.mapToUser(user, userRequest);
         userRepository.save(updatedUser);
-        log.info("User {} updated successfully.", updatedUser.getId());
+        log.info("User {} updated successfully", updatedUser.getId());
     }
 
     @Transactional
@@ -71,7 +71,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         userRepository.delete(user);
-        log.info("User {} deleted successfully.", user.getId());
+        log.info("User {} deleted successfully", user.getId());
     }
 
     public void validateUser(String username, String email) {
@@ -88,13 +88,13 @@ public class UserService {
         if (userRequest.role().equals(UserRole.DOCTOR)) {
             Doctor doctor = userMapper.mapToDoctor(user, userRequest);
             doctorRepository.save(doctor);
-            log.info("Doctor added successfully.");
+            log.info("Doctor added successfully");
         }
 
         if (userRequest.role().equals(UserRole.SECRETARY)) {
             Secretary secretary = userMapper.mapToSecretary(user, userRequest);
             secretaryRepository.save(secretary);
-            log.info("Secretary added successfully.");
+            log.info("Secretary added successfully");
         }
     }
 
