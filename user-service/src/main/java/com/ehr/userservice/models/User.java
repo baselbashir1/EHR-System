@@ -5,11 +5,11 @@ import com.ehr.userservice.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "users")
 public class User extends BaseModel {

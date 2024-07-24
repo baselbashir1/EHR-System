@@ -3,11 +3,11 @@ package com.ehr.userservice.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "doctors")
 public class Doctor extends BaseModel {
