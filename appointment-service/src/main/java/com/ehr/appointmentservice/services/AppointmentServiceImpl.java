@@ -24,7 +24,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentResponse> getAvailableAppointments() {
-        return appointmentRepository.findAllByStatusIs(AppointmentStatus.AVAILABLE.toString())
+        return appointmentRepository.findAllByStatusIs(AppointmentStatus.AVAILABLE)
                 .stream()
                 .map(appointmentMapper::mapToAppointmentResponse)
                 .collect(Collectors.toList());
@@ -32,7 +32,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public void addAppointment(AppointmentRequest appointmentRequest) {
-        appointmentRepository.save(appointmentMapper.mapToAppointment(appointmentRequest));
+        Appointment appointment = appointmentMapper.mapToAppointment(appointmentRequest);
+        appointmentRepository.save(appointment);
         log.info("Appointment added successfully");
     }
 
