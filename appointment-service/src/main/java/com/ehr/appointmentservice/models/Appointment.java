@@ -1,17 +1,16 @@
 package com.ehr.appointmentservice.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.ehr.appointmentservice.enums.AppointmentStatus;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "appointments")
 public class Appointment extends BaseModel {
@@ -31,7 +30,11 @@ public class Appointment extends BaseModel {
     @Column(name = "appointment_date")
     private Date appointmentDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private AppointmentStatus status;
+
+    @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private AppointmentHistory appointmentHistory;
 
 }
