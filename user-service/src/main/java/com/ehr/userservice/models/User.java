@@ -40,6 +40,9 @@ public class User extends BaseModel {
     @Column(name = "status", nullable = false)
     private UserStatus status;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Doctor doctor;
 

@@ -17,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final DoctorRepository doctorRepository;
     private final SecretaryRepository secretaryRepository;
     private final UserMapper userMapper;
+    private final FileStorageService fileStorageService;
 
     @Override
     public User save(User user) {
@@ -55,7 +58,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void addUser(UserRequest userRequest) {
         validateUser(userRequest.username(), userRequest.email());
-        User user = userRepository.save(userMapper.mapToUser(userRequest));
+        User user = userMapper.mapToUser(userRequest);
+
+        MultipartFile image = userRequest.image();
+        if (image != null && !image.isEmpty()) {
+            try {
+                String imageUrl = fileStorageService.storeFile(image);
+                user.setImageUrl(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store image", e);
+            }
+        }
+
+        user = userRepository.save(user);
         insertUserToTargetTable(user, userRequest);
         log.info("User {} added successfully", user.getId());
     }
@@ -76,7 +91,13 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        String imageUrl = user.getImageUrl();
         userRepository.delete(user);
+
+        if (imageUrl != null) {
+            fileStorageService.deleteFile(imageUrl);
+        }
+
         log.info("User {} deleted successfully", user.getId());
     }
 

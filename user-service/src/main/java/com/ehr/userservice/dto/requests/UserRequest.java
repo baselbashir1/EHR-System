@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.web.multipart.MultipartFile;
 
 public record UserRequest(
         @NotNull(message = "Firstname is required")
@@ -31,6 +32,7 @@ public record UserRequest(
         String password,
         UserRole role,
         UserStatus status,
+        MultipartFile image,
         Long clinicId,
         String doctorSpecialty,
         Long doctorId

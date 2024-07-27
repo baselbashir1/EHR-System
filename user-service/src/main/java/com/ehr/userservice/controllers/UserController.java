@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping("/addUser")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> addUser(@Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<Object> addUser(@Valid @ModelAttribute UserRequest userRequest) {
         userService.addUser(userRequest);
         return new ResponseEntity<>("User added successfully", HttpStatus.CREATED);
     }
