@@ -1,6 +1,6 @@
 package com.ehr.userservice.repositories;
 
-import com.ehr.userservice.enums.UserStatus;
+import com.ehr.userservice.enums.Status;
 import com.ehr.userservice.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
-    List<User> findAllByStatus(UserStatus status);
+    List<User> findAllByStatus(Status status);
 
 }

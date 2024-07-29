@@ -2,8 +2,8 @@ package com.ehr.userservice.services;
 
 import com.ehr.userservice.dto.requests.UserRequest;
 import com.ehr.userservice.dto.responses.UserResponse;
-import com.ehr.userservice.enums.UserRole;
-import com.ehr.userservice.enums.UserStatus;
+import com.ehr.userservice.enums.Role;
+import com.ehr.userservice.enums.Status;
 import com.ehr.userservice.mappers.UserMapper;
 import com.ehr.userservice.models.Doctor;
 import com.ehr.userservice.models.Secretary;
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
-        return userRepository.findAllByStatus(UserStatus.ACTIVE)
+        return userRepository.findAllByStatus(Status.ACTIVE)
                 .stream()
                 .map(userMapper::mapToUserResponse)
                 .collect(Collectors.toList());
@@ -112,13 +112,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public void insertUserToTargetTable(User user, UserRequest userRequest) {
-        if (userRequest.role().equals(UserRole.DOCTOR)) {
+        if (userRequest.role().equals(Role.DOCTOR)) {
             Doctor doctor = userMapper.mapToDoctor(user, userRequest);
             doctorRepository.save(doctor);
             log.info("Doctor added successfully");
         }
 
-        if (userRequest.role().equals(UserRole.SECRETARY)) {
+        if (userRequest.role().equals(Role.SECRETARY)) {
             Secretary secretary = userMapper.mapToSecretary(user, userRequest);
             secretaryRepository.save(secretary);
             log.info("Secretary added successfully");

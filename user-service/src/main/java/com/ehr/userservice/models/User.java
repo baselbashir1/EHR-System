@@ -1,7 +1,7 @@
 package com.ehr.userservice.models;
 
-import com.ehr.userservice.enums.UserRole;
-import com.ehr.userservice.enums.UserStatus;
+import com.ehr.userservice.enums.Role;
+import com.ehr.userservice.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,11 +34,11 @@ public class User extends BaseModel {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private UserRole role;
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private UserStatus status;
+    private Status status;
 
     @Column(name = "image_url")
     private String imageUrl;

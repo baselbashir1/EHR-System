@@ -1,7 +1,6 @@
 package com.ehr.authservice.clients;
 
 import com.ehr.authservice.dto.requests.RegisterRequest;
-import com.ehr.authservice.dto.responses.AuthResponse;
 import com.ehr.authservice.dto.responses.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserServiceClient {
 
     @PostMapping("/register")
-    ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest);
+    ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest registerRequest);
 
     @GetMapping("/getUserByUsername/{username}")
     ResponseEntity<UserResponse> getUserByUsername(@PathVariable("username") String username);

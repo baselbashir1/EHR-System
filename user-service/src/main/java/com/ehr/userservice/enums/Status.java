@@ -1,6 +1,6 @@
 package com.ehr.userservice.enums;
 
-public enum UserStatus {
+public enum Status {
     ACTIVE,
     INACTIVE
 }

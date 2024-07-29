@@ -28,16 +28,16 @@ public class AuthServiceImpl implements AuthService {
         UserResponse userResponse = fetchUserDetails(loginRequest.username());
 
         String token = jwtService.generateToken(userResponse.username());
-        return authMapper.mapToAuthResponse(token, userResponse);
+        return authMapper.mapToAuthResponse(token, "Logged in successfully", 200);
     }
 
     @Override
     public AuthResponse register(RegisterRequest registerRequest) {
-        AuthResponse registeredUser = userServiceClient.register(registerRequest).getBody();
+        UserResponse registeredUser = userServiceClient.register(registerRequest).getBody();
         UserResponse userResponse = fetchUserDetails(registeredUser.username());
 
         String token = jwtService.generateToken(userResponse.username());
-        return authMapper.mapToAuthResponse(token, userResponse);
+        return authMapper.mapToAuthResponse(token, "Registered successfully", 201);
     }
 
     private void authenticateUser(LoginRequest loginRequest) {
