@@ -1,8 +1,6 @@
 package com.ehr.userservice.controllers;
 
 import com.ehr.userservice.dto.requests.UserRequest;
-import com.ehr.userservice.dto.requests.RegisterRequest;
-import com.ehr.userservice.services.AuthService;
 import com.ehr.userservice.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final AuthService authService;
-
-    @PostMapping("/register")
-    public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        return new ResponseEntity<>(authService.registerUser(registerRequest), HttpStatus.OK);
-    }
 
     @PostMapping("/addUser")
     @PreAuthorize("hasRole('ADMIN')")
@@ -54,7 +46,12 @@ public class UserController {
 
     @GetMapping("/getUserByUsername/{username}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable("username") String username) {
-        return new ResponseEntity<>(authService.getUserByUsername(username), HttpStatus.OK);
+        return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "test";
     }
 
 }

@@ -1,13 +1,13 @@
 package com.ehr.userservice.services;
 
+import com.ehr.userservice.dto.requests.LoginRequest;
 import com.ehr.userservice.dto.requests.RegisterRequest;
 import com.ehr.userservice.dto.responses.AuthResponse;
-import com.ehr.userservice.dto.responses.UserResponse;
 
 public interface AuthService {
 
-    UserResponse registerUser(RegisterRequest registerRequest);
+    AuthResponse login(LoginRequest loginRequest);
 
-    AuthResponse getUserByUsername(String username);
+    AuthResponse register(RegisterRequest registerRequest);
 
 }

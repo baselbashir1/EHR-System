@@ -1,8 +1,8 @@
-package com.ehr.authservice.controllers;
+package com.ehr.userservice.controllers;
 
-import com.ehr.authservice.dto.requests.LoginRequest;
-import com.ehr.authservice.dto.requests.RegisterRequest;
-import com.ehr.authservice.services.AuthService;
+import com.ehr.userservice.dto.requests.LoginRequest;
+import com.ehr.userservice.dto.requests.RegisterRequest;
+import com.ehr.userservice.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,7 @@ public class AuthController {
     private final AuthService authService;
 
     //TODO: ADD VALIDATION TO THE REQUESTS
+
     @PostMapping("/login")
     public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest loginRequest) {
         return new ResponseEntity<>(authService.login(loginRequest), HttpStatus.OK);

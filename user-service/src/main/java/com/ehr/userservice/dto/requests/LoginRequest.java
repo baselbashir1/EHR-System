@@ -1,4 +1,4 @@
-package com.ehr.authservice.dto.requests;
+package com.ehr.userservice.dto.requests;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

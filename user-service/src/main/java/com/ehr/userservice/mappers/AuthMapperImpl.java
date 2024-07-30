@@ -1,22 +1,17 @@
 package com.ehr.userservice.mappers;
 
 import com.ehr.userservice.dto.responses.AuthResponse;
-import com.ehr.userservice.models.User;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthMapperImpl implements AuthMapper {
 
     @Override
-    public AuthResponse mapToAuthResponse(User user) {
+    public AuthResponse mapToAuthResponse(String token, String message, Integer statusCode) {
         return AuthResponse.builder()
-                .userId(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .password(user.getPassword())
-                .role(user.getRole())
-                .status(user.getStatus())
+                .token(token)
+                .message(message)
+                .statusCode(statusCode)
                 .build();
     }
 

@@ -4,6 +4,13 @@ import com.ehr.userservice.enums.Role;
 import com.ehr.userservice.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -12,7 +19,7 @@ import lombok.*;
 @Data
 @Entity
 @Table(name = "users")
-public class User extends BaseModel {
+public class User extends BaseModel implements UserDetails {
 
     @Column(name = "firstname", nullable = false)
     private String firstname;
@@ -49,4 +56,30 @@ public class User extends BaseModel {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Secretary secretary;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Stream.of(this.role)
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -1,7 +1,7 @@
 package com.ehr.userservice.mappers;
 
-import com.ehr.userservice.dto.requests.UserRequest;
 import com.ehr.userservice.dto.requests.RegisterRequest;
+import com.ehr.userservice.dto.requests.UserRequest;
 import com.ehr.userservice.dto.responses.UserResponse;
 import com.ehr.userservice.enums.Role;
 import com.ehr.userservice.enums.Status;
