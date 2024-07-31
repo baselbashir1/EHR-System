@@ -50,6 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/test")
+    @PreAuthorize("hasAuthority('admin:read')")
     public String test() {
         return "test";
     }
