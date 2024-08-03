@@ -3,8 +3,8 @@ package com.ehr.userservice.mappers;
 import com.ehr.userservice.dto.requests.RegisterRequest;
 import com.ehr.userservice.dto.requests.UserRequest;
 import com.ehr.userservice.dto.responses.UserResponse;
-import com.ehr.userservice.enums.Role;
-import com.ehr.userservice.enums.Status;
+import com.ehr.userservice.enums.UserRole;
+import com.ehr.userservice.enums.UserStatus;
 import com.ehr.userservice.models.Doctor;
 import com.ehr.userservice.models.Secretary;
 import com.ehr.userservice.models.User;
@@ -39,8 +39,8 @@ public class UserMapperImpl implements UserMapper {
                 .email(registerRequest.email())
                 .password(passwordEncoder.encode(registerRequest.password()))
                 .phone(registerRequest.phone())
-                .role(Role.PATIENT)
-                .status(Status.ACTIVE)
+                .role(UserRole.PATIENT)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 
@@ -54,7 +54,7 @@ public class UserMapperImpl implements UserMapper {
                 .password(passwordEncoder.encode(userRequest.password()))
                 .phone(userRequest.phone())
                 .role(userRequest.role())
-                .status(Status.ACTIVE)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 

@@ -1,7 +1,7 @@
 package com.ehr.userservice.dto.responses;
 
-import com.ehr.userservice.enums.Role;
-import com.ehr.userservice.enums.Status;
+import com.ehr.userservice.enums.UserRole;
+import com.ehr.userservice.enums.UserStatus;
 import lombok.Builder;
 
 @Builder
@@ -12,7 +12,7 @@ public record UserResponse(
         String username,
         String email,
         String phone,
-        Role role,
-        Status status
+        UserRole role,
+        UserStatus status
 ) {
 }

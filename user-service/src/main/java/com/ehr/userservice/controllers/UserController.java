@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,28 +20,24 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/addUser")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> addUser(@Valid @ModelAttribute UserRequest userRequest) {
         userService.addUser(userRequest);
         return new ResponseEntity<>("User added successfully", HttpStatus.CREATED);
     }
 
     @PostMapping("/editUser/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> editUser(@Valid @RequestBody UserRequest userRequest, @PathVariable("userId") Long userId) {
         userService.editUser(userRequest, userId);
         return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteUser/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
         return new ResponseEntity<>("User deleted successfully.", HttpStatus.OK);
     }
 
     @GetMapping("/getAllUsers")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
@@ -50,9 +48,10 @@ public class UserController {
     }
 
     @GetMapping("/test")
-    @PreAuthorize("hasAuthority('admin:read')")
+    @PreAuthorize("hasRole('ADMIN')")
     public String test() {
-        return "test";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
 }

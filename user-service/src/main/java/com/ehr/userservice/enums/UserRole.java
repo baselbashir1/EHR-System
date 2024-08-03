@@ -9,24 +9,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.ehr.userservice.enums.Permission.*;
+
 @Getter
 @RequiredArgsConstructor
-public enum Role {
+public enum UserRole {
     ADMIN(Set.of(
-            Permission.ADMIN_READ,
-            Permission.ADMIN_CREATE,
-            Permission.ADMIN_UPDATE,
-            Permission.ADMIN_DELETE,
-            Permission.DOCTOR_READ,
-            Permission.DOCTOR_CREATE,
-            Permission.DOCTOR_UPDATE,
-            Permission.DOCTOR_DELETE
+            ADMIN_READ,
+            ADMIN_CREATE,
+            ADMIN_UPDATE,
+            ADMIN_DELETE,
+            DOCTOR_READ,
+            DOCTOR_CREATE,
+            DOCTOR_UPDATE,
+            DOCTOR_DELETE
     )),
     DOCTOR(Set.of(
-            Permission.DOCTOR_READ,
-            Permission.DOCTOR_CREATE,
-            Permission.DOCTOR_UPDATE,
-            Permission.DOCTOR_DELETE
+            DOCTOR_READ,
+            DOCTOR_CREATE,
+            DOCTOR_UPDATE,
+            DOCTOR_DELETE
     )),
     PATIENT(Collections.emptySet()),
     RECEPTION(Collections.emptySet()),

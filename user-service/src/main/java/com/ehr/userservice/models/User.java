@@ -1,13 +1,16 @@
 package com.ehr.userservice.models;
 
-import com.ehr.userservice.enums.Role;
-import com.ehr.userservice.enums.Status;
+import com.ehr.userservice.enums.UserRole;
+import com.ehr.userservice.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -38,11 +41,11 @@ public class User extends BaseModel implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role;
+    private UserRole role;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status;
+    private UserStatus status;
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -53,9 +56,26 @@ public class User extends BaseModel implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Secretary secretary;
 
+    // @Override
+    // public Collection<? extends GrantedAuthority> getAuthorities() {
+    //     return role.getAuthorities();
+    // }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getAuthorities();
+        return Stream.of(this.role)
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
     }
 
     @Override
@@ -77,4 +97,5 @@ public class User extends BaseModel implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

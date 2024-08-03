@@ -1,7 +1,7 @@
 package com.ehr.userservice.dto.requests;
 
-import com.ehr.userservice.enums.Role;
-import com.ehr.userservice.enums.Status;
+import com.ehr.userservice.enums.UserRole;
+import com.ehr.userservice.enums.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -30,8 +30,8 @@ public record UserRequest(
         @NotEmpty(message = "Password is required")
         @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password must be at least 8 characters and contain at least one letter and one number")
         String password,
-        Role role,
-        Status status,
+        UserRole role,
+        UserStatus status,
         MultipartFile image,
         Long clinicId,
         String doctorSpecialty,
