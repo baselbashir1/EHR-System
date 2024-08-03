@@ -1,15 +1,15 @@
 package com.ehr.userservice.controllers;
 
 import com.ehr.userservice.dto.requests.UserRequest;
+import com.ehr.userservice.services.SecurityLayerService;
 import com.ehr.userservice.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final SecurityLayerService securityLayerService;
 
     @PostMapping("/addUser")
     public ResponseEntity<Object> addUser(@Valid @ModelAttribute UserRequest userRequest) {
@@ -48,10 +49,9 @@ public class UserController {
     }
 
     @GetMapping("/test")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String test() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName();
+    public ResponseEntity<Object> test() {
+        securityLayerService.checkAuthorities(List.of("admin:read", "doctor:read"));
+        return new ResponseEntity<>("True", HttpStatus.OK);
     }
 
 }
